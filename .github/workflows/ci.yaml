@@ -38,3 +38,10 @@ jobs:
         with:
           name: application-jar
           path: target/*.war
+  call-reusable-build:
+    uses: ./.github/workflows/reusable-build.yml
+    with:
+      app-name: my-app-s28
+    secrets:
+      docker-username: ${{ secrets.DOCKER_USERNAME }}
+      docker-password: ${{ secrets.DOCKER_PASSWORD }}
