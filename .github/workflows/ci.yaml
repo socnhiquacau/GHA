@@ -40,9 +40,11 @@ jobs:
           path: target/*.war
   call-reusable-build:
     needs: test
-    uses: ./reusable-build.yml
+    uses: ./.github/workflows/reusable-build.yml
     with:
       app-name: my-app-s28
+      environment: GHA
     secrets:
-      DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-      DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      docker-username: ${{ secrets.DOCKER_USERNAME }}
+      docker-password: ${{ secrets.DOCKER_PASSWORD }}
+
