@@ -10,6 +10,16 @@ on:
       environment:
         required: true
         type: string
+      context-path:
+        description: 'Path to the build context (relative to repository root). Example: . or docker/'
+        required: false
+        default: '.'
+        type: string
+      dockerfile-path:
+        description: 'Path to the Dockerfile (relative to repository root). Example: Dockerfile or docker/Dockerfile'
+        required: false
+        default: 'Dockerfile'
+        type: string
     secrets:
       docker-username:
         description: 'Tên đăng nhập Docker registry'
@@ -38,6 +48,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
+          context: ${{ inputs.context-path }}
+          file: ${{ inputs.dockerfile-path }}
           push: true
           tags: ${{ secrets.docker-username }}/${{ inputs.app-name }}:${{ github.sha }}
