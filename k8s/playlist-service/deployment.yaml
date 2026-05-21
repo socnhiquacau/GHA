@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playlist-service
+  namespace: youtube-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: playlist-service
+  template:
+    metadata:
+      labels:
+        app: playlist-service
+    spec:
+      containers:
+        - name: playlist-service
+          image: youtube/playlist-service:local
+          ports:
+            - containerPort: 8082
+            - containerPort: 9092
+          env:
+            - name: SERVER_PORT
+              value: "8082"
+            - name: GRPC_SERVER_PORT
+              value: "9092"
+            - name: DB_URL
+              value: jdbc:postgresql://postgres:5432/video_db
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: username
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-secret
+                  key: password
+            - name: VIDEO_GRPC_HOST
+              value: video-service
+            - name: VIDEO_GRPC_PORT
+              value: "9091"

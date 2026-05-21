@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: playlist-service
+  namespace: youtube-demo
+spec:
+  selector:
+    app: playlist-service
+  ports:
+    - name: http
+      port: 8082
+      targetPort: 8082
+    - name: grpc
+      port: 9092
+      targetPort: 9092

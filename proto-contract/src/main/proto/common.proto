@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package youtube.common;
+
+option java_multiple_files = true;
+option java_package = "com.example.youtube.proto.common";
+option java_outer_classname = "CommonProto";
+
+message EmptyRequest {}
+
+message CommonStatus {
+  bool success = 1;
+  string message = 2;
+  string error_code = 3;
+}
+
+message PageRequest {
+  int32 page = 1;
+  int32 size = 2;
+}
+
+message PageResponse {
+  int32 page = 1;
+  int32 size = 2;
+  int64 total_elements = 3;
+  int32 total_pages = 4;
+}

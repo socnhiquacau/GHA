@@ -1,0 +1,5 @@
+com\example\youtube\aggregation\service\AggregationService.class
+com\example\youtube\aggregation\service\impl\AggregationServiceImpl.class
+com\example\youtube\aggregation\controller\PingController.class
+com\example\youtube\aggregation\scheduler\TrendingAggregationJob.class
+com\example\youtube\aggregation\AggregationWorkerApplication.class

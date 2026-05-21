@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aggregation-worker
+  namespace: youtube-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: aggregation-worker
+  template:
+    metadata:
+      labels:
+        app: aggregation-worker
+    spec:
+      containers:
+        - name: aggregation-worker
+          image: youtube/aggregation-worker:local
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SERVER_PORT
+              value: "8083"
+            - name: VIDEO_GRPC_HOST
+              value: video-service
+            - name: VIDEO_GRPC_PORT
+              value: "9091"
+            - name: PLAYLIST_GRPC_HOST
+              value: playlist-service
+            - name: PLAYLIST_GRPC_PORT
+              value: "9092"

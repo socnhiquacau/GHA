@@ -26,10 +26,10 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: 📦 Install dependencies
-        run: mvn dependency:resolve
+        run: mvn dependency:resolve #The install tam
 
       - name: Run unit tests
-        run: mvn test --no-transfer-progress
+        run: mvn test --no-transfer-progress #Truyen vào tham số --no-transfer-progress để tắt hiển thị tiến trình tải xuống, giúp log gọn hơn
       - name: Build package
         run: mvn -B -DskipTests package
 
