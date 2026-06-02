@@ -9,11 +9,19 @@
         <artifactId>youtube-playlist-backend</artifactId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
+    <properties>
+        <spring-cloud-aws.version>3.4.2</spring-cloud-aws.version>
+    </properties>
 
     <artifactId>video-service</artifactId>
     <name>video-service</name>
 
     <dependencies>
+        <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-sqs</artifactId>
+            <version>3.4.2</version>
+        </dependency>
         <dependency>
             <groupId>com.example.youtube</groupId>
             <artifactId>common-lib</artifactId>
@@ -58,6 +66,16 @@
             <artifactId>lombok</artifactId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-dependencies</artifactId>
+            <version>${spring-cloud-aws.version}</version>
+            <type>pom</type>
+            <scope>import</scope>
+        </dependency>
+
+
+
     </dependencies>
 
     <build>

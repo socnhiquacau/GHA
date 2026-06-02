@@ -1,4 +1,4 @@
-name: S28Utra
+name: GHA
 on:
   push:
     branches:
@@ -10,9 +10,13 @@ on:
       - main
     paths-ignore:
       - 'README.md'
+permissions:
+  contents: read
+  actions: read
+  checks: write
 jobs:
   test:
-    name: Run tests
+    name: Overall Test
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -24,28 +28,59 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
+
       - name: 📦 Install dependencies
-        run: mvn dependency:resolve #The install tam
+        run: mvn clean compile --no-transfer-progress
+
+      - uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
       - name: Run unit tests
         run: mvn test --no-transfer-progress #Truyen vào tham số --no-transfer-progress để tắt hiển thị tiến trình tải xuống, giúp log gọn hơn
+      - name: Upload test results
+        uses: actions/upload-artifact@v7
+        if: ${{ !cancelled() }} # run this step even if previous step failed
+        with:
+          name: test-results
+          if-no-files-found: error
+          path: |
+            **/target/surefire-reports/TEST-*.xml
+            **/target/failsafe-reports/TEST-*.xml
+
+      - name: Test Report
+        uses: mikepenz/action-junit-report@v6
+        if: ${{ !cancelled() }}       # run this step even if previous step failed
+        with:
+          check_name: JUnit Tests
+          report_paths: |
+            **/target/surefire-reports/TEST-*.xml
+            **/target/failsafe-reports/TEST-*.xml
+
       - name: Build package
         run: mvn -B -DskipTests package
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: application-jar
-          path: target/*.war
+          name: playlist-service-war
+          if-no-files-found: error
+          path: playlist-service/target/*.war
+
   call-reusable-build:
+    if: github.event_name == 'push'
     needs: test
     uses: ./.github/workflows/reusable-build.yml
     with:
       app-name: my-app-s28
       environment: GHA
-      context-path: docker
-      dockerfile-path: docker/Dockerfile
+      artifact-name: playlist-service-war
+      artifact-path: playlist-service/target
+      context-path: .
+      dockerfile-path: docker/playlist-service.Dockerfile
     secrets:
       docker-username: ${{ secrets.DOCKER_USERNAME }}
       docker-password: ${{ secrets.DOCKER_PASSWORD }}

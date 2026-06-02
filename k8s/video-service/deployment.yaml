@@ -20,6 +20,8 @@ spec:
             - containerPort: 8081
             - containerPort: 9091
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
             - name: SERVER_PORT
               value: "8081"
             - name: GRPC_SERVER_PORT

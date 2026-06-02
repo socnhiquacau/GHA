@@ -1,12 +1,9 @@
 # =====================================================
 # Dockerfile cho Product Service
-# Multi-stage build để tối ưu image size
 # =====================================================
 
 # =====================================================
 # STAGE 1: BUILD STAGE
-# Sử dụng Maven image để build application
-# =====================================================
 FROM maven:3.9-eclipse-temurin-17 AS build
 
 # Set working directory trong container

@@ -10,6 +10,14 @@ on:
       environment:
         required: true
         type: string
+      artifact-name:
+        description: 'Name of the application artifact created by the caller workflow'
+        required: true
+        type: string
+      artifact-path:
+        description: 'Directory where the application artifact is restored before the Docker build'
+        required: true
+        type: string
       context-path:
         description: 'Path to the build context (relative to repository root). Example: . or docker/'
         required: false
@@ -36,6 +44,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: Download application artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact-name }}
+          path: ${{ inputs.artifact-path }}
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
@@ -51,4 +65,6 @@ jobs:
           context: ${{ inputs.context-path }}
           file: ${{ inputs.dockerfile-path }}
           push: true
-          tags: ${{ secrets.docker-username }}/${{ inputs.app-name }}:${{ github.sha }}
+          tags: |
+            ${{ secrets.docker-username }}/${{ inputs.app-name }}:${{ github.sha }}
+            ${{ secrets.docker-username }}/${{ inputs.app-name }}:latest

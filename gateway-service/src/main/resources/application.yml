@@ -1,0 +1,30 @@
+spring:
+  profiles:
+    active: local
+  application:
+    name: gateway-service
+
+server:
+  port: ${SERVER_PORT:8080}
+
+grpc:
+  server:
+    port: ${GRPC_SERVER_PORT:9090}
+  client:
+    videoService:
+      address: static://${VIDEO_GRPC_HOST:localhost}:${VIDEO_GRPC_PORT:9091}
+      negotiationType: plaintext
+    playlistService:
+      address: static://${PLAYLIST_GRPC_HOST:localhost}:${PLAYLIST_GRPC_PORT:9092}
+      negotiationType: plaintext
+
+gateway:
+  auth:
+    cookie-name: ${AUTH_COOKIE_NAME:AUTH_USER}
+    required-api-path-prefix: /api
+    excluded-paths:
+      - /ping
+      - /actuator/health
+  routes:
+    video-api-base-url: ${VIDEO_API_BASE_URL:http://localhost:8081}
+    playlist-api-base-url: ${PLAYLIST_API_BASE_URL:http://localhost:8082}

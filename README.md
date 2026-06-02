@@ -13,6 +13,7 @@ Business services trust these headers and enforce domain authorization.
 ## Modules
 - `proto-contract`: protobuf contracts and generated gRPC stubs.
 - `common-lib`: shared exceptions, API response, header/context utilities.
+- `gateway-service`: API/gRPC gateway, cookie authentication, trusted-header propagation.
 - `video-service`: video metadata + view events + trending candidates.
 - `playlist-service`: user playlists, watch later, history, system playlists.
 - `aggregation-worker`: scheduled jobs updating system playlists via gRPC.
@@ -43,18 +44,29 @@ mvn clean install -DskipTests
 Run modules:
 
 ```bash
+mvn -pl gateway-service spring-boot:run
 mvn -pl video-service spring-boot:run
 mvn -pl playlist-service spring-boot:run
 mvn -pl aggregation-worker spring-boot:run
 ```
 
 Default ports:
+- `gateway-service`: HTTP `8080`, gRPC `9090`
 - `video-service`: HTTP `8081`, gRPC `9091`
 - `playlist-service`: HTTP `8082`, gRPC `9092`
 - `aggregation-worker`: HTTP `8083`
 
+## Gateway Authentication
+- Gateway requires cookie `AUTH_USER` by default for all `/api/**` requests.
+- Cookie format: `<userId>:<role>` (example: `AUTH_USER=123:USER`).
+- Gateway injects trusted headers before forwarding:
+  - `X-User-Id`
+  - `X-User-Role`
+  - `X-Request-Id`
+
 ## Docker
 ```bash
+docker build -f docker/gateway-service.Dockerfile -t youtube/gateway-service:local .
 docker build -f docker/video-service.Dockerfile -t youtube/video-service:local .
 docker build -f docker/playlist-service.Dockerfile -t youtube/playlist-service:local .
 docker build -f docker/aggregation-worker.Dockerfile -t youtube/aggregation-worker:local .
@@ -64,6 +76,7 @@ docker build -f docker/aggregation-worker.Dockerfile -t youtube/aggregation-work
 ```bash
 kubectl apply -f k8s/namespace.yaml
 kubectl apply -f k8s/postgres/
+kubectl apply -f k8s/gateway-service/
 kubectl apply -f k8s/video-service/
 kubectl apply -f k8s/playlist-service/
 kubectl apply -f k8s/aggregation-worker/

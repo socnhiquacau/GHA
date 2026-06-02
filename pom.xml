@@ -15,6 +15,7 @@
     <modules>
         <module>proto-contract</module>
         <module>common-lib</module>
+        <module>gateway-service</module>
         <module>video-service</module>
         <module>playlist-service</module>
         <module>aggregation-worker</module>
@@ -48,6 +49,19 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+            <dependency>
+                <groupId>com.example.youtube</groupId>
+                <artifactId>proto-contract</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Source: https://mvnrepository.com/artifact/junit/junit -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

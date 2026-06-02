@@ -2,7 +2,13 @@ package com.example.youtube.playlist.grpc.server;
 
 import com.example.youtube.playlist.service.PlaylistService;
 import com.example.youtube.proto.common.CommonStatus;
-import com.example.youtube.proto.playlist.*;
+import com.example.youtube.proto.playlist.AddHistoryItemRequest;
+import com.example.youtube.proto.playlist.AddHistoryItemResponse;
+import com.example.youtube.proto.playlist.EnsureDefaultUserPlaylistsRequest;
+import com.example.youtube.proto.playlist.EnsureDefaultUserPlaylistsResponse;
+import com.example.youtube.proto.playlist.PlaylistInternalServiceGrpc;
+import com.example.youtube.proto.playlist.UpdateSystemPlaylistRequest;
+import com.example.youtube.proto.playlist.UpdateSystemPlaylistResponse;
 import io.grpc.stub.StreamObserver;
 import lombok.RequiredArgsConstructor;
 import net.devh.boot.grpc.server.service.GrpcService;

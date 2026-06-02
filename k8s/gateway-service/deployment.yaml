@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service
+  namespace: youtube-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-service
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - name: gateway-service
+          image: youtube/gateway-service:local
+          ports:
+            - containerPort: 8080
+            - containerPort: 9090
+          env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: k8s
+            - name: SERVER_PORT
+              value: "8080"
+            - name: GRPC_SERVER_PORT
+              value: "9090"
+            - name: VIDEO_API_BASE_URL
+              value: http://video-service:8081
+            - name: PLAYLIST_API_BASE_URL
+              value: http://playlist-service:8082
+            - name: VIDEO_GRPC_HOST
+              value: video-service
+            - name: VIDEO_GRPC_PORT
+              value: "9091"
+            - name: PLAYLIST_GRPC_HOST
+              value: playlist-service
+            - name: PLAYLIST_GRPC_PORT
+              value: "9092"
+            - name: AUTH_COOKIE_NAME
+              value: AUTH_USER
